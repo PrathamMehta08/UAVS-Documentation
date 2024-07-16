@@ -94,9 +94,9 @@ bash -c 'cd /src/PX4-Autopilot && make px4_sitl gz_{VEHICLE}_{WORLD}'
 
 ---
 
-1. [Run QGroundControl](QGroundControl#Running)
+1. [Run QGroundControl](../../GCS/QGroundControl.md#Running)
 >[!NOTE]
->If QGroundControl is not already installed on the computer, then follow the [Installation Instructions](QGroundControl).
+>If QGroundControl is not already installed on the computer, then follow the [Installation Instructions](../../GCS/QGroundControl.md).
 
 2. Run the simulation by starting PX4 SITL
 
