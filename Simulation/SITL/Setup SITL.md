@@ -1,5 +1,8 @@
 
 ---
+## **Linux**
+
+---
 
 > [!NOTE]
 > **Note**  
@@ -15,7 +18,6 @@
 ### Gazebo Classic (Supported by 20.04 and 22.04)
 
 1. Clone the PX4 Developer Toolchain
-
 ```bash
 mkdir src
 cd src
@@ -23,7 +25,6 @@ git clone --recursive https://github.com/PX4/PX4-Autopilot.git
 ```
 
 2. Run `ubuntu.sh` to install everything
-
 ```bash
 bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
 ```
@@ -55,20 +56,17 @@ make px4_sitl gazebo-classic
 ### Gazebo (Supported by 24.04)
 
 1. Clone PX4-Gazebo-Jammy *(thanks to Vardaan)*
-
 ```bash
 git clone https://github.com/HairyOtter07/PX4-Gazebo-Jammy.git
 ```
 
 2. Run `setup.sh`
-
 ```bash
 cd PX4-Gazebo-Jammy
 ./setup.sh
 ```
 
 3. Run the simulation by starting PX4 SITL
-
 ```bash
 ./run.sh
 ```
@@ -88,9 +86,88 @@ with
 ```bash
 bash -c 'cd /src/PX4-Autopilot && make px4_sitl gz_{VEHICLE}_{WORLD}'
 ```
+
+---
+## **MacOS**
+
+---
+> [!IMPORTANT]
+> **Apple Silicon MacOS**  
+> If you have an Apple M1, M2 etc. Macbook, make sure to run the terminal as x86 by setting up an x86 terminal:
+> 1. Locate the Terminal application within the Utilities folder (**Finder > Go menu > Utilities**)
+> 2. Select _Terminal.app_ and right-click on it, then choose **Duplicate**.
+> 3. Rename the duplicated Terminal app, e.g. to _x86 Terminal_
+> 4. Now select the renamed _x86 Terminal_ app and right-click and choose *_Get Info_
+> 5. Check the box for **Open using Rosetta**, then close the window
+> 6. Run the _x86 Terminal_ as usual, which will fully support the current PX4 toolchain
+
+### Gazebo Classic
+
+1. Set up MacOS environment
+
+```bash
+echo ulimit -S -n 2048 >> ~/.zshenv
+# Point pip3 to MacOS system python 3 pip
+alias pip3=/usr/bin/pip3
+```
+
+2. Install common tools
+
+```bash
+brew tap PX4/px4
+brew install px4-dev
+```
+
+3. Install required Python packages
+
+```bash
+# install required packages using pip3
+python3 -m pip install --user pyserial empty toml numpy pandas jinja2 pyyaml pyros-genmsg packaging kconfiglib future jsonschema
+# if this fails with a permissions error, your Python install is in a system path - use this command instead:
+sudo -H python3 -m pip install --user pyserial empty toml numpy pandas jinja2 pyyaml pyros-genmsg packaging kconfiglib future jsonschema
+```
+
+3. Setup Gazebo Classic
+```bash
+brew unlink tbb
+sed -i.bak '/disable! date:/s/^/  /; /disable! date:/s/./#/3' $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula/tbb@2020.rb
+brew install tbb@2020
+brew link tbb@2020
+```
+
+4. Install SITL simulation
+```bash
+brew install --cask temurin
+brew install --cask xquartz
+brew install px4-sim-gazebo
+```
+
+5. Clone the PX4 Developer Toolchain
+```bash
+git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+cd PX4-Autopilot/Tools/setup
+sh macos.sh
+```
+
+4. Run the simulation by starting PX4 SITL
+```bash
+cd PX4-Autopilot
+make px4_sitl gazebo-classic
+```
+
 ---
 
-# Testing SITL
+### Common Errors
+
+1. Homebrew is looking for the `gettext` library in the wrong folder.  
+
+**Solution**: Create a symbolic link to point Homebrew to the correct folder.
+``` bash
+ln -s "/Users/{errored user}/homebrew" "/Users/{correct user}/homebrew"
+```
+
+---
+## **Testing SITL**
 
 ---
 
